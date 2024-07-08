@@ -5,7 +5,7 @@ const CryptoJS = require("crypto-js");
 const router = require("express").Router();
 const User = require("../models/User");
 
-
+//UPDATE
 router.put("/:id",verifyTokenAndAuthorization,async (req,res)=>{
     if(req.body.password){
         req.body.password=CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString();
@@ -73,7 +73,14 @@ router.get("/stats", verifyTokenAndAdmin, async (req,res)=>{
                     month: { $month: "$createdAt" },
                 },
             },
+            {
+                $group:{
+                    _id:"$month",
+                    total:{ $sum:1 },
+            },
+        },
         ]);
+        res.status(202).json(data);
         
 
 
